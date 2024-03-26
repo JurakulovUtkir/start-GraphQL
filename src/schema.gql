@@ -1,0 +1,31 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Category {
+  id: Int!
+  name: String!
+  category_id: Int!
+}
+
+type Query {
+  findAllCategories: [Category!]!
+  findOneCategory(id: Int!): Category!
+}
+
+type Mutation {
+  createCategory(createCategoryInput: CreateCategoryDto!): Category!
+  updateCategory(updateCategoryInput: UpdateCategoryDto!): Category!
+  removeCategory(id: Int!): Category!
+}
+
+input CreateCategoryDto {
+  name: String!
+  category_id: Int!
+}
+
+input UpdateCategoryDto {
+  id: Int!
+  name: String!
+  category_id: Int!
+}
