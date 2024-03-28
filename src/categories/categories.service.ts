@@ -57,9 +57,10 @@ export class CategoriesService {
     }
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number): Promise<string> {
     try {
       await this.categoryRepository.delete(id);
+      return 'Your category has been removed successfully.';
     } catch (error) {
       // Handle the error appropriately (e.g., log, throw custom exception)
       throw new Error(`Failed to remove category with ID ${id}`);
