@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotAcceptableException } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from './entities/category.entity';
-import { Repository } from 'typeorm';
+import { FindManyOptions, ILike, Repository } from 'typeorm';
 
 @Injectable()
 export class CategoriesService {
@@ -15,6 +15,7 @@ export class CategoriesService {
   async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
     try {
       const category = this.categoryRepository.create(createCategoryDto);
+
       return await this.categoryRepository.save(category);
     } catch (error) {
       // Handle the error appropriately (e.g., log, throw custom exception)
@@ -22,12 +23,28 @@ export class CategoriesService {
     }
   }
 
-  async findAll(): Promise<Category[]> {
+  async findAll(
+    page: number,
+    perPage: number,
+    query: string | null,
+  ): Promise<Category[]> {
     try {
-      return await this.categoryRepository.find();
+      const skip = (page - 1) * perPage;
+      const findOptions: FindManyOptions<Category> = {
+        skip,
+        take: perPage,
+      };
+
+      if (query) {
+        findOptions.where = {
+          name: ILike(`%${query}%`),
+        };
+      }
+
+      return await this.categoryRepository.find(findOptions);
     } catch (error) {
       // Handle the error appropriately (e.g., log, throw custom exception)
-      throw new Error('Failed to fetch categories');
+      throw new NotAcceptableException(error.message);
     }
   }
 

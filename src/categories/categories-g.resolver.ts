@@ -18,8 +18,12 @@ export class CategoriesResolver {
   }
 
   @Query(() => [Category])
-  findAllCategories() {
-    return this.categoriesService.findAll();
+  findAllCategories(
+    @Args('page', { type: () => Int, defaultValue: 1 }) page: number,
+    @Args('perPage', { type: () => Int, defaultValue: 10 }) perPage: number,
+    @Args('query', { type: () => String, nullable: true }) query: string,
+  ) {
+    return this.categoriesService.findAll(page, perPage, query);
   }
 
   @Query(() => Category)

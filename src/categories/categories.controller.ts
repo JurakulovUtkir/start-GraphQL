@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -21,8 +23,14 @@ export class CategoriesController {
   }
 
   @Get()
-  findAll() {
-    return this.categoriesService.findAll();
+  findAll(
+    @Query('page', ParseIntPipe) page: number,
+    @Query('perPage', ParseIntPipe) perPage: number,
+    @Query('query') query: string,
+  ) {
+    page = page ? page : 1;
+    perPage = perPage ? perPage : 10;
+    return this.categoriesService.findAll(page, perPage, query);
   }
 
   @Get(':id')
